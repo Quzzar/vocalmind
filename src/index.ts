@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+export { OpenAIWhisper, OpenAIChatCompletion, OpenAITextToSpeech } from './openai';
 
 interface AudioToText {
   process(input: Blob, stream?: boolean): Promise<string>;
@@ -64,7 +64,9 @@ export class VocalMind {
     }
 
     // Handle preprocessing
-    let chatHistory = cloneDeep(options?.chatHistory || this.options?.chatHistory || []);
+    let chatHistory = JSON.parse(
+      JSON.stringify(options?.chatHistory || this.options?.chatHistory || [])
+    );
     const preProcessorFn = options?.preProcessorFn || this.options?.preProcessorFn;
     if (preProcessorFn) {
       const result = await preProcessorFn(inputText);

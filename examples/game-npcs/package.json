@@ -12,7 +12,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "swr": "^2.0.0",
-    "vocalmind": "^1.0.8"
+    "vocalmind": "^1.0.9"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
