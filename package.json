@@ -1,6 +1,6 @@
 {
   "name": "vocalmind",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "type": "module",
   "exports": {
     ".": "./build/index.js",
