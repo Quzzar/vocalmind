@@ -1,0 +1,22 @@
+{
+  "name": "vocalmind",
+  "version": "1.0.0",
+  "module": "examples/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run --watch examples/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/lodash": "^4.14.202"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "description": "To install dependencies:",
+  "author": "Quzzar",
+  "license": "ISC"
+}
