@@ -13,7 +13,6 @@ export class VocalMind {
         const stream = options?.stream || this.options?.stream || false;
         // Convert audio to text
         let inputText = await this.audioToText.process(audio, stream);
-        inputText = 'Hey! Youre Beth right?';
         if (inputText.trim() === '') {
             return null;
         }
@@ -84,11 +83,11 @@ export class VocalMind {
         }
         // Add response to chat history
         chatHistory.push(responseMessage);
-        if (options) {
-            options.chatHistory = chatHistory;
+        if (this.options) {
+            this.options.chatHistory = chatHistory;
         }
         else {
-            options = {
+            this.options = {
                 chatHistory: chatHistory,
             };
         }
@@ -129,7 +128,7 @@ export class OpenAIWhisper {
                 body: formData,
             });
             const data = (await response.json());
-            return data.text;
+            return data.text ?? '';
         }
         catch (error) {
             console.error('Error:', error);
@@ -176,7 +175,9 @@ export class OpenAIChatCompletion {
                 content: `${messageHeader}\n${msg.message}`.trim(),
             });
         }
-        //console.log(messages);
+        const cleanOutput = (output) => {
+            return output.replace(/^# (.+)\n/g, '');
+        };
         try {
             const res = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
@@ -191,8 +192,7 @@ export class OpenAIChatCompletion {
                 }),
             });
             const response = (await res.json());
-            console.log(response);
-            return response.choices[0].message.content;
+            return cleanOutput(response.choices[0].message.content);
         }
         catch (error) {
             console.error('Error:', error);

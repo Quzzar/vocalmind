@@ -15,6 +15,7 @@ interface ProcessOptions {
   postProcessorFn?(response: string): Promise<string | ChatMessage | null>;
   chatHistory?: ChatMessage[];
   contextPrompt?: string;
+  saveChatHistory?: boolean;
 }
 
 export interface ChatMessage {
@@ -126,13 +127,19 @@ export class VocalMind {
     }
 
     // Add response to chat history
-    chatHistory.push(responseMessage);
-    if (options) {
-      options.chatHistory = chatHistory;
-    } else {
-      options = {
-        chatHistory: chatHistory,
-      };
+    let saveHistory = options?.saveChatHistory || this.options?.saveChatHistory;
+    if (saveHistory === undefined) {
+      saveHistory = true;
+    }
+    if (saveHistory) {
+      chatHistory.push(responseMessage);
+      if (this.options) {
+        this.options.chatHistory = chatHistory;
+      } else {
+        this.options = {
+          chatHistory: chatHistory,
+        };
+      }
     }
 
     return {
@@ -178,7 +185,7 @@ export class OpenAIWhisper {
       });
 
       const data = (await response.json()) as Record<string, any>;
-      return data.text;
+      return data.text ?? '';
     } catch (error) {
       console.error('Error:', error);
       return '';
@@ -234,7 +241,9 @@ export class OpenAIChatCompletion {
       });
     }
 
-    //console.log(messages);
+    const cleanOutput = (output: string) => {
+      return output.replace(/^# (.+)\n/g, '');
+    };
 
     try {
       const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -250,8 +259,7 @@ export class OpenAIChatCompletion {
         }),
       });
       const response = (await res.json()) as Record<string, any>;
-      console.log(response);
-      return response.choices[0].message.content;
+      return cleanOutput(response.choices[0].message.content);
     } catch (error) {
       console.error('Error:', error);
       return '';

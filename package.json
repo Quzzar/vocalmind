@@ -1,6 +1,6 @@
 {
   "name": "vocalmind",
-  "version": "1.0.12",
+  "version": "1.0.17",
   "type": "module",
   "exports": {
     ".": "./build/index.js",
@@ -8,15 +8,12 @@
   },
   "scripts": {
     "start": "bun run --watch examples/index.ts",
-    "build": "bun build --entrypoints ./src/index.ts --outdir ./build --target node && tsc",
+    "build": "bun build --entrypoints ./src/index.ts --outdir ./build --target node && npx tsc",
     "publish": "npm run build && npm publish --access public"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/lodash": "^4.14.202"
-  },
-  "dependencies": {
-    "lodash": "^4.17.21"
+    "typescript": "^5.3.3"
   },
   "description": "",
   "main": "build/index.js",

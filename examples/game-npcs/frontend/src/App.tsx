@@ -1,4 +1,4 @@
-import { AppShell, Box, Burger, Group, Skeleton, Stack, Title } from '@mantine/core';
+import { AppShell, Box, Burger, Button, Group, Skeleton, Stack, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ConvoSection from './ConvoSection';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 export default function App() {
   const [opened, { toggle }] = useDisclosure();
 
-  const [activeId, setActiveId] = useState<number>(-1);
+  const [talkingToId, setTalkingToId] = useState<number>(-1);
+  const [talkingAsId, setTalkingAsId] = useState<number>(-1);
   const [npcs, setNPCs] = useState<NPC[]>([]);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function App() {
       });
       const response = (await res.json()) as { status: string; data: NPC[] };
       setNPCs(response.data);
-      setActiveId(response.data.length > 0 ? response.data[0].id : -1);
+      setTalkingToId(response.data.length > 0 ? response.data[0].id : -1);
     })();
   }, []);
 
@@ -34,16 +35,42 @@ export default function App() {
       </AppShell.Header>
       <AppShell.Navbar p='md'>
         NPCs
-        {Array(15)
-          .fill(0)
-          .map((_, index) => (
-            <Skeleton key={index} h={28} mt='sm' animate={true} />
-          ))}
+        {npcs.length === 0 ? (
+          <>
+            {Array(10)
+              .fill(0)
+              .map((_, index) => (
+                <Skeleton key={index} h={28} mt='sm' animate={true} />
+              ))}
+          </>
+        ) : (
+          <Stack gap={10}>
+            {npcs.map((npc, idx) => (
+              <Button
+                key={idx}
+                variant={talkingToId === npc.id ? 'filled' : 'light'}
+                size='compact-sm'
+                onClick={() => {
+                  setTalkingToId(npc.id);
+                }}
+              >
+                {npc.name}
+              </Button>
+            ))}
+          </Stack>
+        )}
       </AppShell.Navbar>
       <AppShell.Main>
         <Stack>
           <Box>Conversation</Box>
-          <ConvoSection npc={npcs.find((n) => n.id === activeId)} />
+          <ConvoSection
+            npcs={npcs}
+            talkingTo={npcs.find((n) => n.id === talkingToId)}
+            talkingAs={npcs.find((n) => n.id === talkingAsId)}
+            onSelectTalkingAs={(id) => {
+              setTalkingAsId(id);
+            }}
+          />
         </Stack>
       </AppShell.Main>
     </AppShell>
