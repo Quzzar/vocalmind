@@ -1,11 +1,11 @@
 {
   "name": "vocalmind",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
     "start": "bun run --watch examples/index.ts",
-    "build": "bun build ./src/** --outdir ./build"
+    "build": "bun build ./src/** --outdir ./build --sourcemap=external"
   },
   "devDependencies": {
     "@types/bun": "latest",
