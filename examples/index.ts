@@ -1,7 +1,7 @@
 import { VocalMind } from '../src';
 import { OpenAIChatCompletion, OpenAITextToSpeech, OpenAIWhisper } from '../src/openai';
 
-const OPEN_AI_KEY = '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';
+const OPEN_AI_KEY = '';
 
 const mind = new VocalMind(
   {

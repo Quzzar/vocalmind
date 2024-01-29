@@ -106,6 +106,7 @@ export class OpenAIChatCompletion {
         }),
       });
       const response = (await res.json()) as Record<string, any>;
+      console.log(response);
       return response.choices[0].message.content;
     } catch (error) {
       console.error('Error:', error);
