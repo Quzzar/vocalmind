@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { people } from '../../../data';
 import type { Person, ResponseError } from '../../../interfaces';
-import { VocalMind } from 'vocalmind';
 
 export default async function personHandler(
   req: NextApiRequest,

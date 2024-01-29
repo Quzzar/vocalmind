@@ -1,7 +1,6 @@
 {
   "name": "vocalmind",
-  "version": "1.0.5",
-  "module": "src/index.ts",
+  "version": "1.0.6",
   "type": "module",
   "scripts": {
     "start": "bun run --watch examples/index.ts",
@@ -12,16 +11,12 @@
     "@types/bun": "latest",
     "@types/lodash": "^4.14.202"
   },
-  "peerDependencies": {
-    "typescript": "^4.0.0"
-  },
   "dependencies": {
     "lodash": "^4.17.21"
   },
   "description": "",
   "main": "build/index.js",
-  "types": "dist/index.d.ts",
-  "build": "tsc",
+  "types": "build/index.d.ts",
   "author": "Quzzar",
   "license": "MIT"
 }
