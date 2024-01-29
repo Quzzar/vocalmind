@@ -1,18 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
     "declaration": true,
+    "outDir": "./build",
+    "rootDir": "./src",
 
     /* Linting */
     "skipLibCheck": true,
@@ -20,7 +12,6 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": [
-    "examples",
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "build", "examples"] 
 }
