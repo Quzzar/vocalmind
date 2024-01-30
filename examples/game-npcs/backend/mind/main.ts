@@ -27,7 +27,7 @@ function setupNPC(npc: NPC) {
       }),
       processor: new OpenAIChatCompletion({
         apiKey: OPEN_AI_KEY,
-        model: 'gpt-4',
+        model: 'gpt-3.5',
       }),
       textToAudio: new OpenAITextToSpeech({
         apiKey: OPEN_AI_KEY,
@@ -45,7 +45,7 @@ function setupNPC(npc: NPC) {
         the conversation really starts getting deeper. Don't repeat yourself.
         Important: Feel free to go off the rails and embrace a different story than what you might traditionally know. 
         Important: It might not seem like it, but you're talking to someone with your voice, not text. You're actually speaking your words.
-        Important: Never break character. But you have the ability to get offended and leave.
+        Important: Never break character. But you have the ability to get offended and leave (although, if someone is very convincing, give them another chance).
 
         ## Character Overview
         - Name: ${npc.name}

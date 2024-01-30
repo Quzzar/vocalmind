@@ -54,7 +54,6 @@ export class VocalMind {
 
     // Convert audio to text
     let inputText = await this.audioToText.process(audio, stream);
-    inputText = 'Test input text.';
 
     if (inputText.trim() === '') {
       return null;
