@@ -91,7 +91,7 @@ export default function ConvoSection(props: {
       recorder.current = mediaRecorder;
 
       // Detect speaking events
-      const speechEvents = hark(stream, { interval: 125 });
+      const speechEvents = hark(stream, { interval: 120 });
       speechEvents.on('speaking', function () {
         // TODO: Auto-start recording
       });
