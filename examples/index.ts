@@ -1,7 +1,6 @@
-import { VocalMind } from '../src';
-import { OpenAIChatCompletion, OpenAITextToSpeech, OpenAIWhisper } from '../src/openai';
+import { OpenAIChatCompletion, OpenAITextToSpeech, OpenAIWhisper, VocalMind } from '../src';
 
-const OPEN_AI_KEY = '';
+const OPEN_AI_KEY = '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';
 
 const mind = new VocalMind(
   {
@@ -47,15 +46,11 @@ const mind = new VocalMind(
       };
     },
     postProcessorFn: async (response: string) => {
-      try {
-        return {
-          source: 'output',
-          sourceTitle: 'Cathy Clark',
-          message: response,
-        };
-      } catch (e) {
-        return null;
-      }
+      return {
+        source: 'output',
+        sourceTitle: 'Cathy Clark',
+        message: response,
+      };
     },
   }
 );

@@ -1,6 +1,11 @@
 {
   "name": "vocalmind",
-  "version": "1.0.17",
+  "version": "1.0.20",
+  "author": "Quzzar",
+  "description": "",
+  "license": "MIT",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "type": "module",
   "exports": {
     ".": "./build/index.js",
@@ -14,10 +19,5 @@
   "devDependencies": {
     "@types/bun": "latest",
     "typescript": "^5.3.3"
-  },
-  "description": "",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "author": "Quzzar",
-  "license": "MIT"
+  }
 }

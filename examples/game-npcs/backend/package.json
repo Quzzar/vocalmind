@@ -12,6 +12,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "vocalmind": "^1.0.17"
+    "vocalmind": "^1.0.18"
   }
 }

@@ -13,11 +13,13 @@
     "@mantine/core": "^7.5.0",
     "@mantine/hooks": "^7.5.0",
     "@tabler/icons-react": "^2.46.0",
+    "hark": "^1.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vocalmind": "^1.0.11"
   },
   "devDependencies": {
+    "@types/hark": "^1.2.5",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",

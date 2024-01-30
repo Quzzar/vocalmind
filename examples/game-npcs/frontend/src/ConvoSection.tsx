@@ -6,6 +6,7 @@ import {
   IconPlayerPlayFilled,
   IconPlayerSkipForwardFilled,
 } from '@tabler/icons-react';
+import hark from 'hark';
 
 export default function ConvoSection(props: {
   npcs: NPC[];
@@ -52,8 +53,17 @@ export default function ConvoSection(props: {
       mediaRecorder.onstop = function () {
         finishRecording(new Blob(audioChunks.current, { type: 'audio/wav' }));
       };
-
       recorder.current = mediaRecorder;
+
+      // Detect speaking events
+      const speechEvents = hark(stream, {});
+      speechEvents.on('speaking', function () {
+        // TODO: Auto-start recording
+      });
+      speechEvents.on('stopped_speaking', function () {
+        recorder.current?.stop();
+      });
+
       forceUpdate();
     });
   };

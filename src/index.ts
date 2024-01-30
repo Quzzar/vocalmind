@@ -8,9 +8,8 @@ interface TextToAudio {
   process(input: string, stream?: boolean): Promise<Blob>;
 }
 
-interface ProcessOptions {
+export interface ProcessOptions {
   stream?: boolean;
-  audioShift?: {};
   preProcessorFn?(transcript: string): Promise<string | ChatMessage | null>;
   postProcessorFn?(response: string): Promise<string | ChatMessage | null>;
   chatHistory?: ChatMessage[];
@@ -55,6 +54,7 @@ export class VocalMind {
 
     // Convert audio to text
     let inputText = await this.audioToText.process(audio, stream);
+    inputText = 'Test input text.';
 
     if (inputText.trim() === '') {
       return null;
@@ -121,10 +121,12 @@ export class VocalMind {
     }
 
     // Convert text to audio
-    const outputAudio = await this.textToAudio.process(responseText.trim(), stream);
-    const audioShift = options?.audioShift || this.options?.audioShift;
-    if (audioShift) {
-    }
+    let outputAudio = await this.textToAudio.process(responseText.trim(), stream);
+    // const audioShift = options?.audioShift || this.options?.audioShift;
+    // if (audioShift) {
+    //   console.log('Shifting audio', audioShift);
+    //   outputAudio = await shiftAudio(outputAudio, audioShift);
+    // }
 
     // Add response to chat history
     let saveHistory = options?.saveChatHistory || this.options?.saveChatHistory;
@@ -259,6 +261,10 @@ export class OpenAIChatCompletion {
         }),
       });
       const response = (await res.json()) as Record<string, any>;
+
+      if (response.error) {
+        throw new Error('OpenAI: ' + response.error.message);
+      }
       return cleanOutput(response.choices[0].message.content);
     } catch (error) {
       console.error('Error:', error);
