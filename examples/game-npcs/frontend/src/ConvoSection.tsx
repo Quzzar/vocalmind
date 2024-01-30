@@ -1,5 +1,5 @@
-import { Box, Button, Center, Group, LoadingOverlay, Select } from '@mantine/core';
-import { useRef, useState } from 'react';
+import { Box, Button, Center, Group, Select, Avatar } from '@mantine/core';
+import { useEffect, useRef, useState } from 'react';
 import { useForceUpdate } from '@mantine/hooks';
 import {
   IconPlayerStopFilled,
@@ -7,6 +7,7 @@ import {
   IconPlayerSkipForwardFilled,
 } from '@tabler/icons-react';
 import hark from 'hark';
+import SiriWave from 'siriwave';
 
 export default function ConvoSection(props: {
   npcs: NPC[];
@@ -21,6 +22,40 @@ export default function ConvoSection(props: {
   const [loading, setLoading] = useState(false);
 
   const player = useRef<HTMLAudioElement>();
+  const audiowave = useRef<SiriWave>();
+
+  const isPlaying = () => {
+    return player.current && player.current.duration > 0 && !player.current.paused;
+  };
+
+  const startAudioWave = () => {
+    if (audiowave.current) {
+      audiowave.current.start();
+      forceUpdate();
+    }
+  };
+  const stopAudioWave = () => {
+    if (audiowave.current) {
+      audiowave.current.stop();
+      forceUpdate();
+    }
+  };
+  useEffect(() => {
+    // Create SiriWave if it doesn't exist
+    setTimeout(() => {
+      if (audiowave.current) return;
+      audiowave.current = new SiriWave({
+        container: document.getElementById('audiowave')!,
+        width: Math.min(window.innerWidth * 0.6, 500) - 50,
+        height: 300,
+        style: 'ios9',
+        ratio: 2,
+        speed: 0.1,
+        amplitude: 1.1,
+      });
+      stopAudioWave();
+    }, 100);
+  }, [props.talkingTo]);
 
   const handleAudioInput = async (audio: Blob) => {
     const formData = new FormData();
@@ -56,7 +91,7 @@ export default function ConvoSection(props: {
       recorder.current = mediaRecorder;
 
       // Detect speaking events
-      const speechEvents = hark(stream, {});
+      const speechEvents = hark(stream, { interval: 125 });
       speechEvents.on('speaking', function () {
         // TODO: Auto-start recording
       });
@@ -89,7 +124,9 @@ export default function ConvoSection(props: {
       player.current
         .play()
         .then(() => {
-          console.log('Audio playback started successfully');
+          console.log('Audio started');
+
+          startAudioWave();
           forceUpdate();
         })
         .catch((error) => {
@@ -98,6 +135,9 @@ export default function ConvoSection(props: {
 
       // Release memory after playback
       player.current.addEventListener('ended', () => {
+        console.log('Audio stopped');
+
+        stopAudioWave();
         URL.revokeObjectURL(audioUrl);
         forceUpdate();
       });
@@ -109,9 +149,33 @@ export default function ConvoSection(props: {
   if (!props.talkingTo) {
     return <></>;
   }
+
   return (
     <>
-      <LoadingOverlay visible={loading} loaderProps={{ type: 'bars', size: 'xl' }} />
+      {/* <LoadingOverlay visible={loading} loaderProps={{ type: 'oval', size: 'xl' }} /> */}
+
+      <Box style={{ position: 'relative' }}>
+        <Center>
+          <Avatar
+            size={`min(60vw, 500px)`}
+            src={`/npcs/${props.talkingTo.id}.png`}
+            alt={props.talkingTo.name}
+          />
+        </Center>
+        {true && (
+          <Box
+            id='audiowave'
+            style={{
+              position: 'absolute',
+              top: '75%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              display: isPlaying() ? undefined : 'none',
+            }}
+          ></Box>
+        )}
+      </Box>
+
       <Box mt='sm'>
         <Center>
           <Group wrap='nowrap'>
@@ -129,8 +193,9 @@ export default function ConvoSection(props: {
               }}
             />
 
-            {player.current && player.current.duration > 0 && !player.current.paused ? (
+            {isPlaying() ? (
               <Button
+                loading={loading}
                 size='sm'
                 variant='outline'
                 onClick={async () => {
@@ -145,6 +210,7 @@ export default function ConvoSection(props: {
               <>
                 {recorder.current?.state === 'recording' ? (
                   <Button
+                    loading={loading}
                     size='sm'
                     variant='outline'
                     onClick={async () => {
@@ -156,6 +222,7 @@ export default function ConvoSection(props: {
                   </Button>
                 ) : (
                   <Button
+                    loading={loading}
                     size='sm'
                     variant='outline'
                     onClick={async () => {

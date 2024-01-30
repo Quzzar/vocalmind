@@ -1,4 +1,4 @@
-import { AppShell, Box, Burger, Button, Group, Skeleton, Stack, Title } from '@mantine/core';
+import { AppShell, Text, Burger, Button, Group, Skeleton, Stack, Avatar } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ConvoSection from './ConvoSection';
 import { useEffect, useState } from 'react';
@@ -30,11 +30,13 @@ export default function App() {
       <AppShell.Header>
         <Group h='100%' px='md'>
           <Burger opened={opened} onClick={toggle} hiddenFrom='sm' size='sm' />
-          <Title order={2}>Game NPCs</Title>
+          <Avatar src='/logo.png' alt='Logo' />
+          <Text size='2rem' fw={200}>
+            NPCs Test
+          </Text>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p='md'>
-        NPCs
         {npcs.length === 0 ? (
           <>
             {Array(10)
@@ -62,7 +64,9 @@ export default function App() {
       </AppShell.Navbar>
       <AppShell.Main>
         <Stack>
-          <Box>Conversation</Box>
+          <Text size='xl' fw={200}>
+            {npcs.find((n) => n.id === talkingToId)?.name}
+          </Text>
           <ConvoSection
             npcs={npcs}
             talkingTo={npcs.find((n) => n.id === talkingToId)}
