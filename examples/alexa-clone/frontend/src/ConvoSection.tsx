@@ -94,19 +94,24 @@ export default function ConvoSection() {
 
       // Event handler when data is available (audio chunk is recorded)
       mediaRecorder.ondataavailable = function (event) {
-        audioChunks.current.push(event.data);
+        if (event.data.size > 0) {
+          audioChunks.current.push(event.data);
+        }
       };
 
       mediaRecorder.start();
 
       mediaRecorder.onstop = function () {
         finishRecording(new Blob(audioChunks.current, { type: 'audio/wav' }));
+        audioChunks.current = [];
       };
       recorder.current = mediaRecorder;
 
       // Detect speaking events
       const speechEvents = hark(stream, { interval: 120 });
       speechEvents.on('speaking', function () {
+        console.log('Speaking');
+        audioChunks.current = [];
         stopAudio();
       });
       speechEvents.on('stopped_speaking', function () {
@@ -125,7 +130,11 @@ export default function ConvoSection() {
     audioChunks.current = [];
     forceUpdate();
 
-    await handleAudioInput(audioBlob);
+    try {
+      await handleAudioInput(audioBlob);
+    } catch (error) {
+      /**/
+    }
     setLoading(false);
   };
 

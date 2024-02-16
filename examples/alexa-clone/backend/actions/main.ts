@@ -49,8 +49,8 @@ export function processResponse(npc: NPC, response: string): string | null {
     return response;
   }
   action = {
-    action: action.action.trim().toLowerCase(),
-    device: action.device.trim().toLowerCase(),
+    action: action.action?.trim().toLowerCase(),
+    device: action.device?.trim().toLowerCase(),
     metadata: action.metadata?.trim().toLowerCase(),
   };
 
@@ -66,15 +66,33 @@ async function handleActionCommand(npc: NPC, action: Action) {
 
   if (action.action === 'turn_off' && action.device === 'self') {
     turnOff(npc);
+    return;
   }
 
-  if (action.action === 'turn_on') {
+  if (action.action === 'turn_on' || action.action === 'turn_off') {
     const lightIds = getLightIds(action.device);
+    for (const lightId of lightIds) {
+      activateLight(action.action === 'turn_on', lightId);
+    }
+  }
+
+  if (
+    (action.action === 'dim_light' || action.action === 'brighten_light') &&
+    action.metadata &&
+    typeof action.metadata === 'string'
+  ) {
+    const lightIds = getLightIds(action.device);
+    for (const lightId of lightIds) {
+      adjustLight(action.metadata, lightId);
+    }
   }
 
   if (action.action === 'color_light' && action.metadata && typeof action.metadata === 'string') {
     const lightIds = getLightIds(action.device);
-    await Promise.all(lightIds.map((lightId) => colorLight(action.metadata!, lightId)));
+    const gamut = await convertColorToGamut(action.metadata);
+    for (const lightId of lightIds) {
+      colorLight(gamut, lightId);
+    }
   }
 }
 
@@ -85,17 +103,42 @@ function getLightIds(device: string): string[] {
   if (device.includes('desk')) {
     return [process.env.HUE_DESK_LIGHT_ID!];
   }
+  if (device.includes('fire')) {
+    return [process.env.HUE_FIREPLACE_LIGHT_ID!];
+  }
+  if (device.includes('bedroom')) {
+    return [process.env.HUE_BEDROOM_LIGHT_ID!];
+  }
 
   return [];
 }
 
-async function colorLight(color: string, lightId: string) {
-  const gamut = await convertColorToGamut(color);
-
-  console.log('Color:', color, gamut, HUE_APP_KEY, HUE_BRIDGE_IP, lightId);
+async function colorLight(
+  gamut: {
+    x: number;
+    y: number;
+  },
+  lightId: string
+) {
   return fetchHue(`resource/light/${lightId}`, 'PUT', {
     color: {
       xy: gamut,
+    },
+  });
+}
+
+async function adjustLight(dimness: string, lightId: string) {
+  return fetchHue(`resource/light/${lightId}`, 'PUT', {
+    dimming: {
+      brightness: parseInt(dimness),
+    },
+  });
+}
+
+async function activateLight(enabled: boolean, lightId: string) {
+  return fetchHue(`resource/light/${lightId}`, 'PUT', {
+    on: {
+      on: enabled,
     },
   });
 }
@@ -157,7 +200,7 @@ Input: ${color}
       }
     } catch (e) {}
   }
-  return { x: 0.245, y: 0.401 };
+  return { x: 0.459, y: 0.41 };
 }
 
 function turnOff(npc: NPC) {

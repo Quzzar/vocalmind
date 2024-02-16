@@ -84,8 +84,8 @@ function setupNPC(npc: NPC) {
         - Do not reference that you're returning JSON in your response. Just include the JSON at the end of your response.
         - If someone is telling you bye or goodnight, make sure you call the turn_off action on the self device.
         - Always respond with the JSON data for actions, even if previous messages don't show it.
+        - Dimming and brightening lights should always be a number 0-100. 60 is the baseline.
       `,
-      // Fill chat history from db
       chatHistory: [], //getMessages(npc.id),
     }
   );
@@ -133,6 +133,10 @@ export async function talkToNPC(toNpcId: number, fromNpcId: number, audio: Blob)
         sourceTitle: toNPC.name,
         message: res,
       };
+    },
+    preTextToAudioFn: async (text: string) => {
+      // Don't include JSON data in the audio output
+      return text.split('{')[0] ?? '';
     },
   });
   if (!output) {
