@@ -12,6 +12,8 @@ export interface ProcessOptions {
   stream?: boolean;
   preProcessorFn?(transcript: string): Promise<string | ChatMessage | null>;
   postProcessorFn?(response: string): Promise<string | ChatMessage | null>;
+  preTextToAudioFn?(text: string): Promise<string>;
+  preAudioToTextFn?(audio: Blob): Promise<Blob>;
   chatHistory?: ChatMessage[];
   contextPrompt?: string;
   saveChatHistory?: boolean;
@@ -53,7 +55,10 @@ export class VocalMind {
     const stream = options?.stream || this.options?.stream || false;
 
     // Convert audio to text
-    let inputText = await this.audioToText.process(audio, stream);
+    let inputText = await this.audioToText.process(
+      options?.preAudioToTextFn ? await options.preAudioToTextFn(audio) : audio,
+      stream
+    );
 
     if (inputText.trim() === '') {
       return null;
@@ -120,7 +125,12 @@ export class VocalMind {
     }
 
     // Convert text to audio
-    let outputAudio = await this.textToAudio.process(responseText.trim(), stream);
+    let outputAudio = await this.textToAudio.process(
+      options?.preTextToAudioFn
+        ? await options.preTextToAudioFn(responseText.trim())
+        : responseText.trim(),
+      stream
+    );
     // const audioShift = options?.audioShift || this.options?.audioShift;
     // if (audioShift) {
     //   console.log('Shifting audio', audioShift);
