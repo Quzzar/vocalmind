@@ -209,7 +209,7 @@ export class OpenAIChatCompletion {
   private model: string;
   private maxTokens?: number;
 
-  constructor(options: { apiKey: string; model: 'gpt-3.5' | 'gpt-4'; maxTokens?: number }) {
+  constructor(options: { apiKey: string; model: 'gpt-4o' | 'o1'; maxTokens?: number }) {
     this.apiKey = options.apiKey;
     this.model = options.model;
     this.maxTokens = options.maxTokens;
@@ -221,15 +221,15 @@ export class OpenAIChatCompletion {
     stream?: boolean
   ): Promise<string> {
     const MODELS: Record<string, string> = {
-      'gpt-4': 'gpt-4-0125-preview',
-      'gpt-3.5': 'gpt-3.5-turbo-1106',
+      'gpt-4o': 'gpt-4o',
+      o1: 'o1',
     };
 
     let messages: { role: string; content: string }[] = [];
     if (contextPrompt) {
       messages = [
         {
-          role: 'system',
+          role: 'developer',
           content: contextPrompt.trim(),
         },
       ];
@@ -286,17 +286,20 @@ export class OpenAITextToSpeech {
   private apiKey: string;
   private model: string;
   private voice: string;
+  private speed: number | undefined;
   private responseFormat?: string;
 
   constructor(options: {
     apiKey: string;
     model: 'tts-1' | 'tts-1-hd';
-    voice: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+    voice: 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'onyx' | 'nova' | 'sage' | 'shimmer';
+    speed?: number;
     responseFormat?: 'mp3' | 'opus' | 'aac' | 'flac';
   }) {
     this.apiKey = options.apiKey;
     this.model = options.model;
     this.voice = options.voice;
+    this.speed = options.speed;
     this.responseFormat = options.responseFormat;
   }
 
@@ -312,6 +315,7 @@ export class OpenAITextToSpeech {
           model: this.model,
           input: input,
           voice: this.voice,
+          speed: this.speed ?? 1,
           response_format: this.responseFormat,
         }),
       });

@@ -1,6 +1,6 @@
 {
   "name": "vocalmind",
-  "version": "1.0.22",
+  "version": "1.0.24",
   "author": "Quzzar",
   "description": "",
   "license": "MIT",
@@ -18,6 +18,6 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.2"
   }
 }

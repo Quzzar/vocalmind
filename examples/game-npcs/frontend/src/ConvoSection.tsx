@@ -80,7 +80,7 @@ export default function ConvoSection(props: {
     const formData = new FormData();
     formData.append('file', audio, 'audio.wav');
     const res = await fetch(
-      `https://game-nps-example.onrender.com/convo?to_id=${props.talkingTo?.id ?? -1}&&from_id=${
+      `http://localhost:3000/convo?to_id=${props.talkingTo?.id ?? -1}&&from_id=${
         props.talkingAs?.id ?? -1
       }`,
       {

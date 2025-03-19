@@ -7,7 +7,7 @@ export interface NPC {
   skinColor: string;
   eyeColor: string;
   gender: string;
-  voice: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+  voice: 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'onyx' | 'nova' | 'sage' | 'shimmer';
   audioShift: string;
   description: string;
   relations: string;
