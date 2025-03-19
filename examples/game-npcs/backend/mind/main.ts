@@ -27,7 +27,7 @@ function setupNPC(npc: NPC) {
       }),
       processor: new OpenAIChatCompletion({
         apiKey: OPEN_AI_KEY,
-        model: 'gpt-3.5',
+        model: 'o1',
       }),
       textToAudio: new OpenAITextToSpeech({
         apiKey: OPEN_AI_KEY,
