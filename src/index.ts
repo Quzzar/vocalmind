@@ -61,6 +61,7 @@ export class VocalMind {
     );
 
     if (inputText.trim() === '') {
+      console.error('Empty input text');
       return null;
     }
 
@@ -81,6 +82,7 @@ export class VocalMind {
           chatHistory.push(result);
         }
       } else {
+        console.error('Preprocessor returned null');
         return null;
       }
     } else {
@@ -111,6 +113,7 @@ export class VocalMind {
           responseText = result.message;
         }
       } else {
+        console.error('Postprocessor returned null');
         return null;
       }
     } else {
@@ -121,6 +124,7 @@ export class VocalMind {
     }
 
     if (responseText.trim() === '') {
+      console.error('Empty response text');
       return null;
     }
 
